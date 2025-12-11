@@ -11,63 +11,45 @@
     :root {
       --bg: #050814;
       --bg-alt: #0a0f22;
-      --card: #10172f;
+      --card: #0f1729;
+      --card-hover: #141d35;
       --accent: #4f46e5;
-      --accent-soft: rgba(79, 70, 229, 0.15);
+      --accent-glow: rgba(79, 70, 229, 0.3);
       --text: #f9fafb;
+      --text-dim: #d1d5db;
       --muted: #9ca3af;
       --border: #1f2937;
-      --radius-xl: 18px;
-      --radius-lg: 12px;
-      --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.4);
-      --max-width: 1080px;
+      --success: #22c55e;
+      --max-width: 1100px;
     }
 
-    /* ————————————————————————————
-       BACKGROUND PHOTO + VIGNETTE
-       ———————————————————————————— */
+    * { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+    }
+
     body {
       margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background:
-        radial-gradient(circle at top,
-          rgba(0, 0, 0, 0.55) 0%,
-          rgba(0, 0, 0, 0.75) 50%,
-          rgba(0, 0, 0, 0.9) 100%
-        ),
+        radial-gradient(circle at top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0.95) 100%),
         url("stars_background.webp");
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
       color: var(--text);
-      filter: brightness(0.85) contrast(1.1);
+      line-height: 1.6;
+      min-height: 100vh;
     }
 
-    body::after {
-      content: "";
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: -1;
-      background: radial-gradient(circle at center,
-        rgba(0,0,0,0) 50%,
-        rgba(0,0,0,0.45) 100%);
-    }
-
-    /* ————————————————————————————
-       STARFIELD ANIMATION (ONE VERSION ONLY)
-       ———————————————————————————— */
     #starfield {
       position: fixed;
       inset: 0;
-      z-index: -1;
+      z-index: 0;
       pointer-events: none;
       overflow: hidden;
-      opacity: 0.35;
+      opacity: 0.4;
     }
 
     .star {
@@ -76,362 +58,770 @@
       height: 2px;
       background: rgba(255, 255, 255, 0.9);
       border-radius: 50%;
-      filter: blur(0.5px) brightness(1.6);
-      box-shadow: 0 0 4px rgba(255,255,255,0.8);
+      filter: blur(0.5px);
       animation: drift linear infinite;
     }
 
     @keyframes drift {
-      from { transform: translateY(0); }
-      to   { transform: translateY(1800px); }
+      from { transform: translateY(0); opacity: 1; }
+      to { transform: translateY(1800px); opacity: 0.3; }
     }
-
-    /* ————————————————————————————
-       GLOBAL ELEMENT RESET
-       ———————————————————————————— */
-    * { box-sizing: border-box; }
 
     main {
+      position: relative;
+      z-index: 1;
       max-width: var(--max-width);
       margin: 0 auto;
-      padding: 32px 20px 64px;
+      padding: 40px 24px 80px;
     }
 
-    a { color: inherit; text-decoration: none; }
-
-    /* ————————————————————————————
-       YOUR ORIGINAL SITE STYLES (UNCHANGED)
-       ———————————————————————————— */
-
-    .section { margin-bottom: 56px; }
-    .section-header {
-      display: flex; align-items: baseline; gap: 12px; margin-bottom: 20px;
+    a { 
+      color: inherit; 
+      text-decoration: none;
+      transition: all 0.2s ease;
     }
-    .section-title { font-size: 1.3rem; font-weight: 600; }
-    .section-tag {
-      font-size: 0.78rem; text-transform: uppercase;
-      letter-spacing: 0.12em; color: var(--muted);
+
+    /* Navigation */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(5, 8, 20, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      margin: -40px -24px 40px;
+      padding: 16px 24px;
     }
-    .grid-2 {
-      display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2.5fr);
+
+    nav ul {
+      list-style: none;
+      display: flex;
       gap: 28px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-weight: 500;
+      padding: 6px 0;
+      border-bottom: 2px solid transparent;
+    }
+
+    nav a:hover {
+      color: var(--text);
+      border-bottom-color: var(--accent);
+    }
+
+    /* Hero Section */
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 40px;
+      align-items: start;
+      margin-bottom: 80px;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin-bottom: 20px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 5vw, 3rem);
+      font-weight: 700;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-dim);
+      margin-bottom: 24px;
+      line-height: 1.7;
+    }
+
+    .tag-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+
+    .tag {
+      font-size: 0.8rem;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      transition: all 0.2s ease;
+    }
+
+    .tag:hover {
+      border-color: var(--accent);
+      color: var(--text-dim);
+      transform: translateY(-1px);
+    }
+
+    .cta-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5, #06b6d4);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(79, 70, 229, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(79, 70, 229, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      background: rgba(15, 23, 42, 1);
+      transform: translateY(-2px);
+    }
+
+    /* Hero Card */
+    .hero-card {
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.8));
+      border-radius: 20px;
+      padding: 32px;
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0.5;
+    }
+
+    .hero-card h2 {
+      font-size: 1.4rem;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    .hero-card p {
+      color: var(--text-dim);
+      margin-bottom: 24px;
+      line-height: 1.7;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+    }
+
+    .metric {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .metric-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 6px;
+    }
+
+    .metric-value {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    /* Sections */
+    .section {
+      margin-bottom: 80px;
+      scroll-margin-top: 80px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .section-tag {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      padding: 4px 12px;
+      background: rgba(15, 23, 42, 0.8);
+      border-radius: 999px;
+      border: 1px solid var(--border);
+    }
+
+    /* Cards */
+    .card {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .card:hover {
+      border-color: rgba(79, 70, 229, 0.5);
+      background: rgba(15, 23, 42, 0.9);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .card + .card {
+      margin-top: 16px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 12px;
+      gap: 16px;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .card-org {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .card-date {
+      font-size: 0.85rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .card-body {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    .card-body p + p {
+      margin-top: 12px;
+    }
+
+    .pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
     }
 
     .pill {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 6px 12px; border-radius: 999px;
-      background: rgba(15,23,42,0.9); border: 1px solid rgba(148,163,184,0.4);
-      color: var(--muted); font-size: 0.78rem;
-    }
-    .pill span {
-      width: 6px; height: 6px; border-radius: 50%; background: #22c55e;
-      box-shadow: 0 0 0 4px rgba(34,197,94,0.2);
+      font-size: 0.75rem;
+      padding: 5px 12px;
+      border-radius: 999px;
+      background: rgba(79, 70, 229, 0.1);
+      border: 1px solid rgba(79, 70, 229, 0.3);
+      color: #a5b4fc;
     }
 
-    .hero { display: grid; grid-template-columns: minmax(0,2.6fr) minmax(0,2.2fr);
-      gap: 32px; align-items: center; }
-    .hero-heading { font-size: clamp(1.9rem,3vw,2.4rem); font-weight: 650; margin-bottom: 12px; }
-    .hero-subtitle { font-size: .98rem; color: var(--muted); max-width: 34rem; margin-bottom: 18px; }
-    .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
-
-    .tag {
-      font-size: 0.78rem; padding: 4px 10px;
-      border-radius: 999px; border: 1px solid rgba(148,163,184,.5);
-      color: var(--muted); background: rgba(15,23,42,.8);
+    /* Grid Layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
     }
 
-    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-
-    .btn {
-      padding: 8px 16px; border-radius: 999px; cursor: pointer;
-      font-size: 0.9rem; transition: transform .1s, box-shadow .1s;
-      display: inline-flex; align-items: center; justify-content: center;
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
     }
-    .btn-primary {
-      background: linear-gradient(135deg,#4f46e5,#06b6d4);
-      color: #fff; box-shadow: 0 12px 30px rgba(15,23,42,0.7);
+
+    /* Skills */
+    .skills-list {
+      list-style: none;
+      margin-top: 12px;
     }
-    .btn-outline {
-      background: rgba(15,23,42,0.9);
-      border: 1px solid rgba(148,163,184,0.6); color: var(--muted);
+
+    .skills-list li {
+      padding: 8px 0;
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    .btn:hover { transform: translateY(-1px); box-shadow: 0 16px 40px rgba(15,23,42,0.9); }
 
-    .hero-card {
-      background: radial-gradient(circle at top left, #1d253a, #020617 65%);
-      border-radius: 24px; padding: 18px;
-      border: 1px solid rgba(148,163,184,0.4);
-      box-shadow: var(--shadow-soft);
+    .skills-list li::before {
+      content: '▸';
+      color: var(--accent);
+      font-weight: bold;
     }
-    .hero-card-inner {
-      background: linear-gradient(135deg, rgba(15,23,42,.9), rgba(30,64,175,.85));
-      padding: 18px 16px; border-radius: 18px;
+
+    /* Contact */
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 16px;
     }
-    .card {
-  background: linear-gradient(145deg, #020617, #020617, #020617);
-  border-radius: var(--radius-xl);
-  border: 1px solid var(--border);
-  padding: 18px 18px 16px;
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.4);
-}
 
-.card + .card {
-  margin-top: 12px;
-}
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      transition: all 0.2s ease;
+    }
 
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 12px;
-  margin-bottom: 6px;
-}
+    .contact-item:hover {
+      border-color: var(--accent);
+      background: rgba(15, 23, 42, 0.9);
+      transform: translateX(4px);
+    }
 
-.card-title {
-  font-size: 0.96rem;
-  font-weight: 550;
-}
+    .contact-item strong {
+      color: var(--muted);
+      min-width: 70px;
+      font-size: 0.85rem;
+    }
 
-.card-meta {
-  font-size: 0.78rem;
-  color: var(--muted);
-}
+    .contact-item a {
+      color: #a5b4fc;
+      text-decoration: underline;
+      text-decoration-style: dotted;
+    }
 
-.card-body {
-  font-size: 0.88rem;
-  color: #e5e7eb;
-}
+    .contact-item a:hover {
+      color: #c4b5fd;
+    }
 
-.card-body p + p {
-  margin-top: 6px;
-}
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 40px 24px;
+      color: var(--muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+    }
 
-.pill-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 8px;
-}
-
-.pill-small {
-  font-size: 0.72rem;
-  padding: 3px 8px;
-  border-radius: 999px;
-  background: rgba(15,23,42,0.9);
-  border: 1px solid rgba(148,163,184,0.5);
-  color: var(--muted);
-}
-    .hero-metrics {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.metric {
-  flex: 1 1 110px;
-  border-radius: var(--radius-lg);
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(148,163,184,0.4);
-  padding: 10px 11px;
-}
-
-.metric-label {
-  font-size: 0.7rem;
-  color: var(--muted);
-  margin-bottom: 3px;
-  text-transform: uppercase;
-  letter-spacing: 0.09em;
-}
-
-.metric-value {
-  font-size: 0.96rem;
-  font-weight: 600;
-}
-    .skills-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.skills-column h4 {
-  font-size: 0.85rem;
-  margin-bottom: 4px;
-  color: #e5e7eb;
-}
-
-.skills-column ul {
-  list-style: none;
-  font-size: 0.82rem;
-  color: var(--muted);
-}
-
-.skills-column li + li {
-  margin-top: 2px;
-}
-.contact-text {
-  font-size: 0.9rem;
-  color: var(--muted);
-  margin-bottom: 12px;
-}
-
-.contact-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
-  font-size: 0.86rem;
-}
-
-.contact-row a {
-  color: #c4b5fd;
-  text-decoration: underline;
-  text-decoration-style: dotted;
-}
-footer {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 20px 28px;
-  font-size: 0.75rem;
-  color: var(--muted);
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-footer span {
-  opacity: 0.8;
-}
-        /* ————————————————————————————
-       MOBILE FIXES
-       ———————————————————————————— */
+    /* Mobile Responsive */
     @media (max-width: 768px) {
-
       body {
-        background-attachment: scroll; /* mobile-safe */
-        background-size: cover;
-        background-position: center top;
+        background-attachment: scroll;
+      }
+
+      main {
+        padding: 24px 16px 60px;
+      }
+
+      nav {
+        margin: -24px -16px 32px;
+        padding: 12px 16px;
+      }
+
+      nav ul {
+        gap: 16px;
+      }
+
+      nav a {
+        font-size: 0.85rem;
       }
 
       .hero {
         grid-template-columns: 1fr;
-        gap: 20px;
+        gap: 32px;
+        margin-bottom: 60px;
       }
 
-      .grid-2 {
+      h1 {
+        font-size: 2rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1rem;
+      }
+
+      .section {
+        margin-bottom: 60px;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+      }
+
+      .grid-2,
+      .grid-3 {
         grid-template-columns: 1fr;
-        gap: 20px;
-      }
-
-      .hero-heading {
-        font-size: 1.8rem;
-      }
-
-      main {
-        padding: 20px 16px 48px;
       }
 
       #starfield {
-        opacity: 0.45; /* brighter on mobile */
-      }
-
-      .star {
-        animation-duration: 14s; /* slow them down slightly */
-      }
-
-      footer {
-        text-align: center;
-        flex-direction: column;
-        gap: 6px;
+        opacity: 0.3;
       }
     }
-    /* MOBILE FIX — CLEAN SKILLS LAYOUT */
-@media (max-width: 768px) {
-  .skills-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-  }
-
-  .skills-column h4 {
-    margin-bottom: 8px;
-  }
-
-  .skills-column ul {
-    margin-top: 0;
-  }
-}
-    /* Fix stretched blurry background on mobile */
-@media (max-width: 768px) {
-  body {
-    background-attachment: scroll; /* removes the forced zoom */
-    background-size: contain;      /* keeps the whole image visible */
-    background-repeat: no-repeat;
-    background-position: top center;
-  }
-
-  body::after {
-    background: radial-gradient(circle at center,
-      rgba(0,0,0,0) 30%,
-      rgba(0,0,0,0.5) 90%
-    );
-  }
-}
-    @media (max-width: 768px) {
-  body {
-    background:
-      radial-gradient(circle at top,
-        rgba(0,0,0,0.55) 0%,
-        rgba(0,0,0,0.75) 50%,
-        rgba(0,0,0,0.9) 100%
-      ),
-      url("stars_background.webp") no-repeat top center / cover;
-    background-attachment: scroll;
-  }
-
-  #starfield {
-    opacity: 0.25; /* mobile performance boost */
-  }
-}
   </style>
-  
 </head>
 
 <body>
-
   <div id="starfield"></div>
-  <main> <!-- Hero --> <header> <div class="hero"> <div> <div class="pill"> <span></span> <div>Open to co-op, research, and graduate opportunities</div> </div> <h1 class="hero-heading">Ben Stan</h1> <p class="hero-subtitle"> Fourth year Chemical Engineering student at the University of Waterloo with experience across catalysis, electrochemistry, nanoparticles, automation, and process control. </p> <div class="hero-tags"> <div class="tag">Catalysis & electrochemistry</div> <div class="tag">Nanomaterials & surface engineering</div> <div class="tag">Nuclear & advanced energy</div> <div class="tag">Process intensification</div> </div> <div class="hero-actions"> <!-- Replace with your actual LinkedIn and email --> <a class="btn btn-primary" href="https://www.linkedin.com/in/benstan-chemeng" target="_blank" rel="noopener"> View LinkedIn </a> <a class="btn btn-outline" href="mailto:bstan@chem.engineering"> Email Ben </a> </div> </div> <aside class="hero-card"> <div class="hero-card-inner"> <h2>Chemical Engineering x Materials x Nuclear</h2> <p> Building a career at the intersection of research and real world deployment across energy, materials, and advanced processes. </p> <div class="hero-metrics"> <div class="metric"> <div class="metric-label">Experience</div> <div class="metric-value">30 months of co-op</div> </div> <div class="metric"> <div class="metric-label">Focus</div> <div class="metric-value">Catalysis & nanomaterials</div> </div> <div class="metric"> <div class="metric-label">Highlight</div> <div class="metric-value">CNL Nuclear Innovation winner</div> </div> </div> </div> </aside> </div> </header> <!-- About --> <section class="section" id="about"> <div class="section-header"> <h2 class="section-title">About</h2> <span class="section-tag">Background</span> </div> <div class="grid-2"> <div class="card"> <div class="card-body"> <p> I am a fourth year Chemical Engineering student at the University of Waterloo with 30 months of hands on experience across research labs, pilot scale manufacturing, and industrial process control. </p> <p> I recently completed a co-op in the Klinkova Lab, where I worked on catalysis and nanomaterials research involving decoupled electrolysis, electro Fenton oxidation, multimetal nanoparticles, and surface modified electrodes for catalytic and optical applications. </p> <p> Across earlier co-ops I have contributed to process optimization, including increasing ethanol bioreactor yields by 180 percent, and built workflow automation tools using Power BI, Power Automate, SharePoint, and custom code in Python, C++, and Java. </p> <p> I am interested in roles and graduate programs that connect catalysis, nuclear engineering, surface engineering, and process intensification with high impact industrial or energy applications. </p> </div> </div> <div class="card"> <div class="card-body"> <p><strong>Current interests</strong></p> <p> Catalysis and electrochemistry for clean processes, nanomaterial enabled surfaces, nuclear fuel systems, and experimental methods that push toward safer, more efficient reactors and industrial assets. </p> <p> I enjoy moving between hands on experimentation, data analysis, and automation, then using those tools to design smarter processes. </p> </div> </div> </div> </section> <!-- Experience & Highlights --> <section class="section" id="experience"> <div class="section-header"> <h2 class="section-title">Experience</h2> <span class="section-tag">Selected roles</span> </div> <div class="grid-2"> <div> <div class="card"> <div class="card-header"> <div> <div class="card-title"> Catalysis & Nanomaterials Research Assistant </div> <div class="card-meta">Klinkova Lab, University of Waterloo</div> </div> <div class="card-meta">2025</div> </div> <div class="card-body"> <p> Worked on decoupled electrolysis, electro Fenton oxidation, and nanoparticle coated electrodes for catalytic and optical systems. </p> <div class="pill-list"> <span class="pill-small">Electrochemistry</span> <span class="pill-small">Nanoparticles</span> <span class="pill-small">Surface engineering</span> <span class="pill-small">GC MS & NMR</span> </div> </div> </div> <div class="card"> <div class="card-header"> <div> <div class="card-title">Process Co-op</div> <div class="card-meta">AirBoss of America</div> </div> <div class="card-meta">2025</div> </div> <div class="card-body"> <p> Supported process control and automation for manufacturing lines. Used FTIR and plant data to support troubleshooting and continuous improvement. </p> <div class="pill-list"> <span class="pill-small">Process control</span> <span class="pill-small">Automation</span> <span class="pill-small">FTIR</span> </div> </div> </div> <div class="card"> <div class="card-header"> <div> <div class="card-title"> Chemical Research & Development Lab Assistant </div> <div class="card-meta">Woodbridge</div> </div> <div class="card-meta">2024</div> </div> <div class="card-body"> <p> Worked on lab scale experiments and data analysis for chemical products while building reporting tools in Power BI and Power Automate. </p> <div class="pill-list"> <span class="pill-small">R&D</span> <span class="pill-small">Power BI</span> <span class="pill-small">Power Automate</span> </div> </div> </div> </div> <!-- Highlights --> <div> <div class="card"> <div class="card-header"> <div> <div class="card-title"> Nuclear Innovation Challenge - Overall Winner </div> <div class="card-meta">Canadian Nuclear Laboratories</div> </div> </div> <div class="card-body"> <p> Part of the overall winning team for a national competition focused on future nuclear systems. </p> <p> Our group designed an integrated nuclear fuel security and monitoring platform that combined computer vision, sensor fusion, and real time web alerts for loading and unloading operations. </p> <div class="pill-list"> <span class="pill-small">Nuclear engineering</span> <span class="pill-small">Computer vision</span> <span class="pill-small">Sensor fusion</span> </div> </div> </div> <div class="card"> <div class="card-header"> <div> <div class="card-title">Process optimization highlight</div> </div> </div> <div class="card-body"> <p> Contributed to a bioprocess optimization initiative that increased ethanol bioreactor yields by 180 percent through better analysis, control and operational changes. </p> <div class="pill-list"> <span class="pill-small">Bioreactors</span> <span class="pill-small">Data driven optimization</span> <span class="pill-small">Process intensification</span> </div> </div> </div> </div> </div> </section> <!-- Skills --> <section class="section" id="skills"> <div class="section-header"> <h2 class="section-title">Skills</h2> <span class="section-tag">What I work with</span> </div> <div class="card"> <div class="skills-grid"> <div class="skills-column"> <h4>Chemical & lab</h4> <ul> <li>Catalysis and electrochemistry</li> <li>Nanoparticles and surface modification</li> <li>Electro Fenton oxidation</li> <li>Bioreactors and distillation</li> <li>GC MS, NMR, FTIR, ion chromatography</li> </ul> </div> <div class="skills-column"> <h4>Process & tools</h4> <ul> <li>Process control and troubleshooting</li> <li>Process engineering and Aspen Plus</li> <li>Workflow automation with Power BI</li> <li>Power Automate and SharePoint</li> <li>P&ID and technical reporting</li> </ul> </div> <div class="skills-column"> <h4>Programming & tech</h4> <ul> <li>Python, C++, Java</li> <li>AI and ML with PyTorch and TensorFlow</li> <li>Data analysis and visualization</li> <li>Automation scripts and tooling</li> <li>Experimental data processing</li> </ul> </div> </div> </div> </section> <!-- Contact --> <section class="section" id="contact"> <div class="section-header"> <h2 class="section-title">Contact</h2> <span class="section-tag">Reach out</span> </div> <div class="card"> <p class="contact-text"> I am open to opportunities in research labs, nuclear and energy focused organizations, and materials or process development roles. I am also interested in graduate programs that intersect chemical engineering, nuclear, and advanced materials. </p> <div class="contact-row"> <!-- Replace with your real info --> <div>Email: <a href="mailto:bstan@chem.engineering">bstan@chem.engineering</a></div> <div>LinkedIn: <a href="https://www.linkedin.com/in/benstan-chemeng" target="_blank" rel="noopener">https://www.linkedin.com/in/benstan-chemeng</a></div> </div> </div> </section> </main>
+
+  <main>
+    <nav>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <!-- Hero -->
+    <header>
+      <div class="hero">
+        <div>
+          <div class="status-pill">
+            <span class="status-dot"></span>
+            Open to co-op, research, and graduate opportunities
+          </div>
+          
+          <h1>Ben Stan</h1>
+          
+          <p class="hero-subtitle">
+            Fourth-year Chemical Engineering student at the University of Waterloo with 30 months of experience across catalysis, electrochemistry, nanoparticles, automation, and process control.
+          </p>
+
+          <div class="tag-group">
+            <span class="tag">Catalysis & Electrochemistry</span>
+            <span class="tag">Nanomaterials</span>
+            <span class="tag">Nuclear & Energy</span>
+            <span class="tag">Process Intensification</span>
+          </div>
+
+          <div class="cta-group">
+            <a class="btn btn-primary" href="https://www.linkedin.com/in/benstan-chemeng" target="_blank" rel="noopener">
+              View LinkedIn
+            </a>
+            <a class="btn btn-secondary" href="mailto:bstan@chem.engineering">
+              Email Me
+            </a>
+          </div>
+        </div>
+
+        <aside class="hero-card">
+          <h2>Chemical Engineering × Materials × Nuclear</h2>
+          <p>
+            Building a career at the intersection of research and real-world deployment across energy, materials, and advanced processes.
+          </p>
+          <div class="metrics">
+            <div class="metric">
+              <div class="metric-label">Experience</div>
+              <div class="metric-value">30 months</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">Focus</div>
+              <div class="metric-value">Catalysis</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">Award</div>
+              <div class="metric-value">CNL Winner</div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </header>
+
+    <!-- About -->
+    <section class="section" id="about">
+      <div class="section-header">
+        <h2 class="section-title">About</h2>
+        <span class="section-tag">Background</span>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-body">
+            <p>
+              I am a fourth-year Chemical Engineering student at the University of Waterloo with 30 months of hands-on experience across research labs, pilot-scale manufacturing, and industrial process control.
+            </p>
+            <p>
+              I recently completed a co-op in the Klinkova Lab, where I worked on catalysis and nanomaterials research involving decoupled electrolysis, electro-Fenton oxidation, multimetal nanoparticles, and surface-modified electrodes for catalytic and optical applications.
+            </p>
+            <p>
+              Across earlier co-ops I have contributed to process optimization, including increasing ethanol bioreactor yields by 180%, and built workflow automation tools using Power BI, Power Automate, SharePoint, and custom code in Python, C++, and Java.
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <p><strong>Current Interests</strong></p>
+            <p>
+              Catalysis and electrochemistry for clean processes, nanomaterial-enabled surfaces, nuclear fuel systems, and experimental methods that push toward safer, more efficient reactors and industrial assets.
+            </p>
+            <p>
+              I enjoy moving between hands-on experimentation, data analysis, and automation, then using those tools to design smarter processes.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Experience -->
+    <section class="section" id="experience">
+      <div class="section-header">
+        <h2 class="section-title">Experience</h2>
+        <span class="section-tag">Roles & Highlights</span>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Catalysis & Nanomaterials Research Assistant</div>
+            <div class="card-org">Klinkova Lab, University of Waterloo</div>
+          </div>
+          <div class="card-date">2025</div>
+        </div>
+        <div class="card-body">
+          <p>
+            Worked on decoupled electrolysis, electro-Fenton oxidation, and nanoparticle-coated electrodes for catalytic and optical systems.
+          </p>
+          <div class="pill-list">
+            <span class="pill">Electrochemistry</span>
+            <span class="pill">Nanoparticles</span>
+            <span class="pill">Surface Engineering</span>
+            <span class="pill">GC-MS & NMR</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Process Co-op</div>
+            <div class="card-org">AirBoss of America</div>
+          </div>
+          <div class="card-date">2025</div>
+        </div>
+        <div class="card-body">
+          <p>
+            Supported process control and automation for manufacturing lines. Used FTIR and plant data to support troubleshooting and continuous improvement.
+          </p>
+          <div class="pill-list">
+            <span class="pill">Process Control</span>
+            <span class="pill">Automation</span>
+            <span class="pill">FTIR</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Chemical Research & Development Lab Assistant</div>
+            <div class="card-org">Woodbridge</div>
+          </div>
+          <div class="card-date">2024</div>
+        </div>
+        <div class="card-body">
+          <p>
+            Worked on lab-scale experiments and data analysis for chemical products while building reporting tools in Power BI and Power Automate.
+          </p>
+          <div class="pill-list">
+            <span class="pill">R&D</span>
+            <span class="pill">Power BI</span>
+            <span class="pill">Power Automate</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Nuclear Innovation Challenge - Overall Winner</div>
+            <div class="card-org">Canadian Nuclear Laboratories</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <p>
+            Part of the overall winning team for a national competition focused on future nuclear systems. Our group designed an integrated nuclear fuel security and monitoring platform that combined computer vision, sensor fusion, and real-time web alerts.
+          </p>
+          <div class="pill-list">
+            <span class="pill">Nuclear Engineering</span>
+            <span class="pill">Computer Vision</span>
+            <span class="pill">Sensor Fusion</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills -->
+    <section class="section" id="skills">
+      <div class="section-header">
+        <h2 class="section-title">Skills</h2>
+        <span class="section-tag">Technical Expertise</span>
+      </div>
+      <div class="grid-3">
+        <div class="card">
+          <h3 class="card-title">Chemical & Lab</h3>
+          <ul class="skills-list">
+            <li>Catalysis & electrochemistry</li>
+            <li>Nanoparticles & surface modification</li>
+            <li>Electro-Fenton oxidation</li>
+            <li>Bioreactors & distillation</li>
+            <li>GC-MS, NMR, FTIR, ion chromatography</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Process & Tools</h3>
+          <ul class="skills-list">
+            <li>Process control & troubleshooting</li>
+            <li>Process engineering & Aspen Plus</li>
+            <li>Workflow automation with Power BI</li>
+            <li>Power Automate & SharePoint</li>
+            <li>P&ID & technical reporting</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Programming & Tech</h3>
+          <ul class="skills-list">
+            <li>Python, C++, Java</li>
+            <li>AI & ML with PyTorch & TensorFlow</li>
+            <li>Data analysis & visualization</li>
+            <li>Automation scripts & tooling</li>
+            <li>Experimental data processing</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="section" id="contact">
+      <div class="section-header">
+        <h2 class="section-title">Contact</h2>
+        <span class="section-tag">Get in Touch</span>
+      </div>
+      <div class="card">
+        <p class="card-body">
+          I am open to opportunities in research labs, nuclear and energy-focused organizations, and materials or process development roles. I am also interested in graduate programs that intersect chemical engineering, nuclear, and advanced materials.
+        </p>
+        <div class="contact-links">
+          <div class="contact-item">
+            <strong>Email</strong>
+            <a href="mailto:bstan@chem.engineering">bstan@chem.engineering</a>
+          </div>
+          <div class="contact-item">
+            <strong>LinkedIn</strong>
+            <a href="https://www.linkedin.com/in/benstan-chemeng" target="_blank" rel="noopener">linkedin.com/in/benstan-chemeng</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 
   <footer>
-    <span>© <span id="year"></span> Ben Stan</span>
-    <span>Built with HTML & CSS</span>
+    <p>© <span id="year"></span> Ben Stan • Built with HTML & CSS</p>
   </footer>
 
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
 
     const field = document.getElementById("starfield");
-
-    function makeStars() {
-      for (let i = 0; i < 200; i++) {
-        const s = document.createElement("div");
-        s.className = "star";
-        s.style.left = Math.random() * window.innerWidth + "px";
-        s.style.top = Math.random() * window.innerHeight + "px";
-        s.style.opacity = (Math.random() * 0.8 + 0.2).toFixed(2);
-        s.style.transform = `scale(${(Math.random() * 1.5 + 0.5).toFixed(2)})`;
-        s.style.animationDuration = (Math.random() * 12 + 10) + "s";
-        field.appendChild(s);
-      }
+    for (let i = 0; i < 200; i++) {
+      const s = document.createElement("div");
+      s.className = "star";
+      s.style.left = Math.random() * 100 + "%";
+      s.style.top = Math.random() * -50 + "%";
+      s.style.opacity = (Math.random() * 0.7 + 0.3).toFixed(2);
+      s.style.animationDuration = (Math.random() * 15 + 12) + "s";
+      s.style.animationDelay = (Math.random() * 5) + "s";
+      field.appendChild(s);
     }
-    makeStars();
-  </script>
 
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
 </body>
 </html>
-
-
-
-
-
-
