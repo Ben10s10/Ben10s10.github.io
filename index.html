@@ -62,9 +62,48 @@
       animation: drift linear infinite;
     }
 
+    .star.twinkle {
+      animation: drift linear infinite, twinkle 3s ease-in-out infinite;
+    }
+
     @keyframes drift {
       from { transform: translateY(0); opacity: 1; }
       to { transform: translateY(1800px); opacity: 0.3; }
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* Particle effect on scroll */
+    .scroll-indicator {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      animation: bounce 2s infinite;
+      opacity: 0.6;
+      transition: opacity 0.3s;
+    }
+
+    .scroll-indicator.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-10px); }
+    }
+
+    .scroll-arrow {
+      width: 24px;
+      height: 24px;
+      border-left: 2px solid var(--accent);
+      border-bottom: 2px solid var(--accent);
+      transform: rotate(-45deg);
     }
 
     main {
@@ -296,7 +335,22 @@
     .section {
       margin-bottom: 80px;
       scroll-margin-top: 80px;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 0.6s ease forwards;
     }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .section:nth-child(1) { animation-delay: 0.1s; }
+    .section:nth-child(2) { animation-delay: 0.2s; }
+    .section:nth-child(3) { animation-delay: 0.3s; }
+    .section:nth-child(4) { animation-delay: 0.4s; }
 
     .section-header {
       display: flex;
@@ -330,13 +384,29 @@
       padding: 24px;
       transition: all 0.3s ease;
       position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(79, 70, 229, 0.1), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .card:hover::before {
+      left: 100%;
     }
 
     .card:hover {
       border-color: rgba(79, 70, 229, 0.5);
       background: rgba(15, 23, 42, 0.9);
       transform: translateY(-4px);
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(79, 70, 229, 0.2);
     }
 
     .card + .card {
@@ -538,6 +608,11 @@
 
 <body>
   <div id="starfield"></div>
+
+  <!-- Scroll indicator -->
+  <div class="scroll-indicator" id="scrollIndicator">
+    <div class="scroll-arrow"></div>
+  </div>
 
   <main>
     <nav>
@@ -800,10 +875,11 @@
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
 
+    // Enhanced starfield with twinkling
     const field = document.getElementById("starfield");
     for (let i = 0; i < 200; i++) {
       const s = document.createElement("div");
-      s.className = "star";
+      s.className = i % 5 === 0 ? "star twinkle" : "star"; // Every 5th star twinkles
       s.style.left = Math.random() * 100 + "%";
       s.style.top = Math.random() * -50 + "%";
       s.style.opacity = (Math.random() * 0.7 + 0.3).toFixed(2);
@@ -821,6 +897,67 @@
           target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       });
+    });
+
+    // Hide scroll indicator after scrolling
+    const scrollIndicator = document.getElementById('scrollIndicator');
+    let scrollTimeout;
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 100) {
+        scrollIndicator.classList.add('hidden');
+      } else {
+        scrollIndicator.classList.remove('hidden');
+      }
+    });
+
+    // Add particle trail effect to mouse (optional - subtle)
+    let mouseTrail = [];
+    document.addEventListener('mousemove', (e) => {
+      if (mouseTrail.length > 15) mouseTrail.shift();
+      
+      const particle = document.createElement('div');
+      particle.style.position = 'fixed';
+      particle.style.width = '4px';
+      particle.style.height = '4px';
+      particle.style.borderRadius = '50%';
+      particle.style.background = 'rgba(79, 70, 229, 0.5)';
+      particle.style.pointerEvents = 'none';
+      particle.style.zIndex = '9999';
+      particle.style.left = e.clientX + 'px';
+      particle.style.top = e.clientY + 'px';
+      particle.style.transition = 'all 0.5s ease-out';
+      
+      document.body.appendChild(particle);
+      mouseTrail.push(particle);
+      
+      setTimeout(() => {
+        particle.style.opacity = '0';
+        particle.style.transform = 'scale(0)';
+        setTimeout(() => particle.remove(), 500);
+      }, 50);
+    });
+
+    // Intersection Observer for scroll animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    // Observe cards for staggered animation
+    document.querySelectorAll('.card').forEach((card, index) => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(30px)';
+      card.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+      observer.observe(card);
     });
   </script>
 </body>
